@@ -82,10 +82,10 @@ const LoginForm = () => {
 
   return (
     <form className='mt-5 space-y-5' onSubmit={handleSubmit}>
-      <div className='grid w-full max-w-sm items-center gap-1.5'>
+      <div className='grid w-full items-center gap-1.5'>
         <Label htmlFor='username'>Username</Label>
         <Input
-          className='rounded-2xl p-5'
+          className='rounded-2xl p-5 text-sm md:text-base'
           type='text'
           id='username'
           value={username}
@@ -93,13 +93,15 @@ const LoginForm = () => {
           placeholder='Username'
           aria-label='Username'
         />
-        {usernameError && <p className='text-red-500'>{usernameError}</p>}
+        {usernameError && (
+          <p className='text-sm text-red-500'>{usernameError}</p>
+        )}
       </div>
 
-      <div className='grid w-full max-w-sm items-center gap-1.5'>
+      <div className='grid w-full items-center gap-1.5'>
         <Label htmlFor='password'>Password</Label>
         <Input
-          className='rounded-2xl p-5'
+          className='rounded-2xl p-5 text-sm md:text-base'
           type='password'
           id='password'
           value={password}
@@ -107,14 +109,16 @@ const LoginForm = () => {
           placeholder='Password'
           aria-label='Password'
         />
-        {passwordError && <p className='text-red-500'>{passwordError}</p>}
+        {passwordError && (
+          <p className='text-sm text-red-500'>{passwordError}</p>
+        )}
       </div>
 
       {/* Display login error */}
-      {loginError && <p className='text-red-500'>{loginError}</p>}
+      {loginError && <p className='text-sm text-red-500'>{loginError}</p>}
 
       <Button
-        className='w-full rounded-2xl bg-[#0575e6] p-5 text-white'
+        className='w-full rounded-2xl bg-[#0575e6] p-5 text-sm text-white md:text-base'
         type='submit'
         disabled={isLoading}
       >
