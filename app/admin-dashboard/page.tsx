@@ -1,23 +1,28 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function AdminDashboard() {
+  const [loading, setLoading] = useState(true) // Initialize loading state
   const router = useRouter()
 
   useEffect(() => {
-    // Simulate getting the auth status and user type from localStorage
-    const isAuthenticated =
-      typeof window !== 'undefined' && localStorage.getItem('userType')
     const userType =
       typeof window !== 'undefined' && localStorage.getItem('userType')
 
-    // If not authenticated or user is not an admin, redirect to login or homepage
-    if (!isAuthenticated || userType !== 'admin') {
-      router.push('/') // Redirect to login or a designated page
+    // Simulate the auth check
+    if (!userType || userType !== 'admin') {
+      // If not authenticated or user is not admin, redirect to login
+      router.push('/')
+    } else {
+      setLoading(false) // Stop loading once authenticated
     }
   }, [router])
+
+  if (loading) {
+    return <div>Loading...</div> // Show a loading state while checking authentication
+  }
 
   return (
     <div>
