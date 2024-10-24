@@ -47,87 +47,89 @@ const Sidebar = () => {
       </Button>
 
       <aside
-        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#0575e6] p-4 text-white transition-transform sm:h-dvh ${
+        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col justify-between bg-gradient-to-t from-[#02298a] to-[#0575e6] p-4 text-white transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
       >
-        <h2 className='mb-6 text-xl font-bold'>DashZone</h2>
+        <div>
+          <h2 className='mb-6 text-xl font-bold'>DashZone</h2>
 
-        {/* Sidebar Links */}
-        <ul className='flex-grow space-y-4'>
-          {userType === 'admin' && (
-            <>
-              <li>
-                <Link
-                  href='/admin-dashboard'
-                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
-                >
-                  Admin Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href='/admin/settings'
-                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
-                >
-                  Admin Settings
-                </Link>
-              </li>
-            </>
-          )}
+          {/* Sidebar Links */}
+          <ul className='space-y-4'>
+            {userType === 'admin' && (
+              <>
+                <li>
+                  <Link
+                    href='/admin-dashboard'
+                    className='block rounded-full px-4 py-2 hover:bg-gray-700'
+                  >
+                    Admin Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/admin/settings'
+                    className='block rounded-full px-4 py-2 hover:bg-gray-700'
+                  >
+                    Admin Settings
+                  </Link>
+                </li>
+              </>
+            )}
 
-          {userType === 'editor' && (
-            <>
-              <li>
-                <Link
-                  href='/editor-dashboard'
-                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
-                >
-                  Editor Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href='/editor/settings'
-                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
-                >
-                  Editor Settings
-                </Link>
-              </li>
-            </>
-          )}
+            {userType === 'editor' && (
+              <>
+                <li>
+                  <Link
+                    href='/editor-dashboard'
+                    className='block rounded-full px-4 py-2 hover:bg-gray-700'
+                  >
+                    Editor Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/editor/settings'
+                    className='block rounded-full px-4 py-2 hover:bg-gray-700'
+                  >
+                    Editor Settings
+                  </Link>
+                </li>
+              </>
+            )}
 
-          {userType === 'viewer' && (
-            <>
-              <li>
-                <Link
-                  href='/viewer-dashboard'
-                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
-                >
-                  Viewer Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href='/viewer/settings'
-                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
-                >
-                  Viewer Settings
-                </Link>
-              </li>
-            </>
-          )}
+            {userType === 'viewer' && (
+              <>
+                <li>
+                  <Link
+                    href='/viewer-dashboard'
+                    className='block rounded-full px-4 py-2 hover:bg-gray-700'
+                  >
+                    Viewer Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/viewer/settings'
+                    className='block rounded-full px-4 py-2 hover:bg-gray-700'
+                  >
+                    Viewer Settings
+                  </Link>
+                </li>
+              </>
+            )}
 
-          {!userType && (
-            <li>
-              <p className='block rounded px-4 py-2'>Loading...</p>
-            </li>
-          )}
-        </ul>
+            {!userType && (
+              <li>
+                <p className='block rounded px-4 py-2'>Loading...</p>
+              </li>
+            )}
+          </ul>
+        </div>
 
         {/* Logout Button */}
         {userType && (
-          <div className='sm:mt-auto'>
+          <div className='mt-auto'>
             <Button
               onClick={handleLogout}
               className='block w-full rounded-full bg-red-600 px-4 py-2 hover:bg-red-500'
