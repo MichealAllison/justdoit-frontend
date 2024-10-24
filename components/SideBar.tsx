@@ -47,9 +47,10 @@ const Sidebar = () => {
       </Button>
 
       <aside
-        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#0575e6] p-4 text-white transition-transform ${
+        className={`fixed left-0 top-0 flex h-full w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#0575e6] p-4 text-white transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
+        style={{ height: '100vh', overflowY: 'auto' }} // Ensuring full height with scroll
       >
         <div className='flex h-full flex-col'>
           {/* Sidebar Header */}
@@ -131,7 +132,7 @@ const Sidebar = () => {
 
           {/* Logout Button */}
           {userType && (
-            <div className='mt-auto'>
+            <div className='mt-4'>
               <Button
                 onClick={handleLogout}
                 className='block w-full rounded-full bg-red-600 px-4 py-2 hover:bg-red-500'
