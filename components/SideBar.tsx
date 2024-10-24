@@ -19,6 +19,8 @@ const Sidebar = () => {
   const handleLogout = () => {
     // Clear user session
     localStorage.removeItem('userType')
+    localStorage.removeItem('name')
+    localStorage.removeItem('username')
     setUserType(null)
 
     // Redirect to login page or home page
@@ -50,7 +52,7 @@ const Sidebar = () => {
             <>
               <li>
                 <Link
-                  href='/admindashboard'
+                  href='/admin-dashboard'
                   className='block rounded px-4 py-2 hover:bg-gray-700'
                 >
                   Admin Dashboard
@@ -71,7 +73,7 @@ const Sidebar = () => {
             <>
               <li>
                 <Link
-                  href='/editordashboard'
+                  href='/editor-dashboard'
                   className='block rounded px-4 py-2 hover:bg-gray-700'
                 >
                   Editor Dashboard
@@ -92,7 +94,7 @@ const Sidebar = () => {
             <>
               <li>
                 <Link
-                  href='/viewerdashboard'
+                  href='/viewer-dashboard'
                   className='block rounded px-4 py-2 hover:bg-gray-700'
                 >
                   Viewer Dashboard

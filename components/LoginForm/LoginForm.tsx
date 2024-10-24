@@ -1,44 +1,45 @@
 'use client'
-import { useState } from 'react'
+
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useRouter } from 'next/navigation'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+import { FormikHelpers } from 'formik'
+
+interface FormValues {
+  username: string
+  password: string
+}
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [usernameError, setUsernameError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [loginError, setLoginError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const initialValues: FormValues = {
+    username: '',
+    password: ''
+  }
 
-    // Reset all errors
-    setUsernameError('')
-    setPasswordError('')
-    setLoginError('')
+  const validate = (values: FormValues) => {
+    const errors: Partial<FormValues> = {}
 
-    // Validate username and password fields
-    if (!username) {
-      setUsernameError('Username is required.')
-    }
-    if (!password) {
-      setPasswordError('Password is required.')
+    if (!values.username) {
+      errors.username = 'Username is required.'
     }
 
-    // If either field is missing, stop the process
-    if (!username || !password) return
+    if (!values.password) {
+      errors.password = 'Password is required.'
+    }
 
-    setIsLoading(true)
+    return errors
+  }
 
-    // Simulate login process (hardcoded credentials)
+  const handleSubmit = (
+    values: FormValues,
+    { setSubmitting, setErrors }: FormikHelpers<FormValues>
+  ) => {
+    // Simulate login process
     setTimeout(() => {
-      setIsLoading(false)
-
       // Hardcoded user credentials with names
       const users = [
         {
@@ -63,7 +64,8 @@ const LoginForm = () => {
 
       // Find user by matching username and password
       const user = users.find(
-        user => user.username === username && user.password === password
+        user =>
+          user.username === values.username && user.password === values.password
       )
 
       if (user) {
@@ -73,58 +75,69 @@ const LoginForm = () => {
         localStorage.setItem('name', user.name)
 
         // Redirect to appropriate dashboard based on userType
-        router.push(`/${user.type}dashboard`)
+        router.push(`/${user.type}-dashboard`)
       } else {
-        setLoginError('Invalid username or password.')
+        // Set global form error
+        setErrors({ username: 'Invalid username or password.' })
       }
+
+      setSubmitting(false)
     }, 1500)
   }
 
   return (
-    <form className='mt-5 space-y-5' onSubmit={handleSubmit}>
-      <div className='grid w-full items-center gap-1.5'>
-        <Label htmlFor='username'>Username</Label>
-        <Input
-          className='rounded-2xl p-5 text-sm md:text-base'
-          type='text'
-          id='username'
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          placeholder='Username'
-          aria-label='Username'
-        />
-        {usernameError && (
-          <p className='text-sm text-red-500'>{usernameError}</p>
-        )}
-      </div>
+    <Formik
+      initialValues={initialValues}
+      validate={validate}
+      onSubmit={handleSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Form className='mt-5 space-y-5'>
+          <div className='grid w-[300px] items-center gap-1.5'>
+            <Label htmlFor='username'>Username</Label>
+            <Field
+              name='username'
+              type='text'
+              as={Input}
+              className='h-[50px] rounded-full p-5 text-sm md:text-base'
+              placeholder='Username'
+              aria-label='Username'
+            />
+            <ErrorMessage
+              name='username'
+              component='p'
+              className='text-sm text-red-500'
+            />
+          </div>
 
-      <div className='grid w-full items-center gap-1.5'>
-        <Label htmlFor='password'>Password</Label>
-        <Input
-          className='rounded-2xl p-5 text-sm md:text-base'
-          type='password'
-          id='password'
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder='Password'
-          aria-label='Password'
-        />
-        {passwordError && (
-          <p className='text-sm text-red-500'>{passwordError}</p>
-        )}
-      </div>
+          <div className='-[300px] grid items-center gap-1.5'>
+            <Label htmlFor='password'>Password</Label>
+            <Field
+              name='password'
+              type='password'
+              as={Input}
+              className='h-[50px] rounded-full p-5 text-sm md:text-base'
+              placeholder='Password'
+              aria-label='Password'
+            />
+            <ErrorMessage
+              name='password'
+              component='p'
+              className='text-sm text-red-500'
+            />
+          </div>
 
-      {/* Display login error */}
-      {loginError && <p className='text-sm text-red-500'>{loginError}</p>}
-
-      <Button
-        className='w-full rounded-2xl bg-[#0575e6] p-5 text-sm text-white md:text-base'
-        type='submit'
-        disabled={isLoading}
-      >
-        {isLoading ? 'Logging in...' : 'Login'}
-      </Button>
-    </form>
+          {/* Submit button */}
+          <Button
+            className='h-[50px] w-[300px] rounded-full bg-[#0575e6] p-5 text-sm text-white md:text-base'
+            type='submit'
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Logging in...' : 'Login'}
+          </Button>
+        </Form>
+      )}
+    </Formik>
   )
 }
 
