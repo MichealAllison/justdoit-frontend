@@ -6,9 +6,9 @@ import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [emailError, setEmailError] = useState('')
+  const [usernameError, setUsernameError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [loginError, setLoginError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -18,20 +18,20 @@ const LoginForm = () => {
     e.preventDefault()
 
     // Reset all errors
-    setEmailError('')
+    setUsernameError('')
     setPasswordError('')
     setLoginError('')
 
-    // Validate email and password fields
-    if (!email) {
-      setEmailError('Email is required.')
+    // Validate username and password fields
+    if (!username) {
+      setUsernameError('Username is required.')
     }
     if (!password) {
       setPasswordError('Password is required.')
     }
 
     // If either field is missing, stop the process
-    if (!email || !password) return
+    if (!username || !password) return
 
     setIsLoading(true)
 
@@ -39,18 +39,43 @@ const LoginForm = () => {
     setTimeout(() => {
       setIsLoading(false)
 
-      // Hardcoded user credentials
-      if (email === 'admin@example.com' && password === 'admin123') {
-        localStorage.setItem('userType', 'admin')
-        router.push('/admindashboard')
-      } else if (email === 'editor@example.com' && password === 'editor123') {
-        localStorage.setItem('userType', 'editor')
-        router.push('/editordashboard')
-      } else if (email === 'viewer@example.com' && password === 'viewer123') {
-        localStorage.setItem('userType', 'viewer')
-        router.push('/viewerdashboard')
+      // Hardcoded user credentials with names
+      const users = [
+        {
+          username: 'admin',
+          password: 'admin123',
+          name: 'Admin User',
+          type: 'admin'
+        },
+        {
+          username: 'editor',
+          password: 'editor123',
+          name: 'Editor User',
+          type: 'editor'
+        },
+        {
+          username: 'viewer',
+          password: 'viewer123',
+          name: 'Viewer User',
+          type: 'viewer'
+        }
+      ]
+
+      // Find user by matching username and password
+      const user = users.find(
+        user => user.username === username && user.password === password
+      )
+
+      if (user) {
+        // Save userType, username, and name to localStorage
+        localStorage.setItem('userType', user.type)
+        localStorage.setItem('username', user.username)
+        localStorage.setItem('name', user.name)
+
+        // Redirect to appropriate dashboard based on userType
+        router.push(`/${user.type}dashboard`)
       } else {
-        setLoginError('Invalid email or password.')
+        setLoginError('Invalid username or password.')
       }
     }, 1500)
   }
@@ -58,17 +83,17 @@ const LoginForm = () => {
   return (
     <form className='mt-5 space-y-5' onSubmit={handleSubmit}>
       <div className='grid w-full max-w-sm items-center gap-1.5'>
-        <Label htmlFor='email'>Email</Label>
+        <Label htmlFor='username'>Username</Label>
         <Input
           className='rounded-2xl p-5'
-          type='email'
-          id='email'
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder='Email'
-          aria-label='Email'
+          type='text'
+          id='username'
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          placeholder='Username'
+          aria-label='Username'
         />
-        {emailError && <p className='text-red-500'>{emailError}</p>}
+        {usernameError && <p className='text-red-500'>{usernameError}</p>}
       </div>
 
       <div className='grid w-full max-w-sm items-center gap-1.5'>
