@@ -127,7 +127,7 @@ const Sidebar = () => {
 
         {/* Logout Button */}
         {userType && (
-          <div className='mt-auto'>
+          <div className='sm:mt-auto'>
             <Button
               onClick={handleLogout}
               className='block w-full rounded-full bg-red-600 px-4 py-2 hover:bg-red-500'
