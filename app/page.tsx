@@ -40,7 +40,7 @@ export default function Home() {
             {/* Right Section with Login */}
             <div className='flex flex-1 flex-col items-center justify-center p-6 md:items-start md:p-12 lg:p-24'>
               {/* Welcome Text for Mobile (Hidden on larger screens) */}
-              <div className='mb-10 text-center sm:hidden md:text-left'>
+              <div className='mb-10 text-center md:hidden md:text-left'>
                 <p className='text-2xl font-bold text-[#02298a] md:text-4xl'>
                   DashZone
                 </p>
