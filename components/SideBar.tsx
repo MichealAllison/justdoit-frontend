@@ -60,7 +60,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href='/admin-dashboard'
-                  className='block rounded px-4 py-2 hover:bg-gray-700'
+                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
                 >
                   Admin Dashboard
                 </Link>
@@ -68,7 +68,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href='/admin/settings'
-                  className='block rounded px-4 py-2 hover:bg-gray-700'
+                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
                 >
                   Admin Settings
                 </Link>
@@ -81,7 +81,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href='/editor-dashboard'
-                  className='block rounded px-4 py-2 hover:bg-gray-700'
+                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
                 >
                   Editor Dashboard
                 </Link>
@@ -89,7 +89,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href='/editor/settings'
-                  className='block rounded px-4 py-2 hover:bg-gray-700'
+                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
                 >
                   Editor Settings
                 </Link>
@@ -102,7 +102,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href='/viewer-dashboard'
-                  className='block rounded px-4 py-2 hover:bg-gray-700'
+                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
                 >
                   Viewer Dashboard
                 </Link>
@@ -110,7 +110,7 @@ const Sidebar = () => {
               <li>
                 <Link
                   href='/viewer/settings'
-                  className='block rounded px-4 py-2 hover:bg-gray-700'
+                  className='block rounded-full px-4 py-2 hover:bg-gray-700'
                 >
                   Viewer Settings
                 </Link>
@@ -130,7 +130,7 @@ const Sidebar = () => {
           <div className='mt-auto'>
             <Button
               onClick={handleLogout}
-              className='block w-full rounded bg-red-600 px-4 py-2 hover:bg-red-500'
+              className='block w-full rounded-full bg-red-600 px-4 py-2 hover:bg-red-500'
             >
               Logout
             </Button>
