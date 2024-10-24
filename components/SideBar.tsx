@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation' // Change import if using app router
+import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
+import Image from 'next/image'
 
 const Sidebar = () => {
   const [userType, setUserType] = useState<string | null>(null)
@@ -23,7 +24,7 @@ const Sidebar = () => {
     localStorage.removeItem('username')
     setUserType(null)
 
-    // Redirect to login page or home page
+    // Redirect to login page
     router.push('/')
   }
 
@@ -34,20 +35,26 @@ const Sidebar = () => {
   return (
     <>
       <Button
-        className='fixed right-4 top-4 z-50 rounded bg-[#0575e6] p-2 text-white md:hidden'
+        className='fixed right-4 top-4 z-50 rounded p-1 md:hidden'
         onClick={toggleSidebar}
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
       >
-        {isOpen ? '✕' : '☰'}
+        {isOpen ? (
+          <Image src='/close.svg' alt='Close menu' width={24} height={24} />
+        ) : (
+          <Image src='/menu.svg' alt='Open menu' width={24} height={24} />
+        )}
       </Button>
 
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 transform bg-gradient-to-t from-[#02298a] to-[#0575e6] p-4 text-white transition-transform ${
+        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#0575e6] p-4 text-white transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
       >
         <h2 className='mb-6 text-xl font-bold'>DashZone</h2>
-        <ul className='space-y-4'>
+
+        {/* Sidebar Links */}
+        <ul className='flex-grow space-y-4'>
           {userType === 'admin' && (
             <>
               <li>
@@ -117,13 +124,17 @@ const Sidebar = () => {
             </li>
           )}
         </ul>
+
+        {/* Logout Button */}
         {userType && (
-          <Button
-            onClick={handleLogout}
-            className='mt-6 block w-full rounded bg-red-600 px-4 py-2 hover:bg-red-500'
-          >
-            Logout
-          </Button>
+          <div className='mt-auto'>
+            <Button
+              onClick={handleLogout}
+              className='block w-full rounded bg-red-600 px-4 py-2 hover:bg-red-500'
+            >
+              Logout
+            </Button>
+          </div>
         )}
       </aside>
     </>
