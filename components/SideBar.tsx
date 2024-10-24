@@ -51,9 +51,9 @@ const Sidebar = () => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
       >
-        <div className='flex h-full flex-col justify-between'>
+        <div className='flex h-full flex-col'>
           {/* Sidebar Header */}
-          <div>
+          <div className='flex-grow'>
             <h2 className='mb-6 text-xl font-bold'>DashZone</h2>
 
             {/* Sidebar Links */}
@@ -131,7 +131,7 @@ const Sidebar = () => {
 
           {/* Logout Button */}
           {userType && (
-            <div className='mt-6'>
+            <div className='mt-auto'>
               <Button
                 onClick={handleLogout}
                 className='block w-full rounded-full bg-red-600 px-4 py-2 hover:bg-red-500'
