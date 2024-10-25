@@ -39,9 +39,9 @@ export default function Custom404() {
       {/* Back Home Button */}
       <Button
         className='rounded-full bg-[#0575e6] px-4 py-2 text-sm text-white md:px-6 md:py-3 md:text-base'
-        onClick={() => router.push('/')}
+        onClick={() => router.back()}
       >
-        Go Back Home
+        Go Back
       </Button>
     </div>
   )
