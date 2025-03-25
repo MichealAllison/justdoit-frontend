@@ -2,10 +2,12 @@
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useRouter } from 'next/navigation'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
+import { Button } from '../../ui/button'
+import { Input } from '../../ui/input'
+import { Label } from '../../ui/label'
 import { FormikHelpers } from 'formik'
+import Link from 'next/link'
+import { useState } from 'react'
 
 interface FormValues {
   username: string
@@ -14,6 +16,7 @@ interface FormValues {
 
 const LoginForm = () => {
   const router = useRouter()
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const initialValues: FormValues = {
     username: '',
@@ -34,55 +37,37 @@ const LoginForm = () => {
     return errors
   }
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: FormValues,
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
-    // Simulate login process
-    setTimeout(() => {
-      // Hardcoded user credentials with names
-      const users = [
-        {
-          username: 'admin',
-          password: 'admin123',
-          name: 'Admin User',
-          type: 'admin'
-        },
-        {
-          username: 'editor',
-          password: 'editor123',
-          name: 'Editor User',
-          type: 'editor'
-        },
-        {
-          username: 'viewer',
-          password: 'viewer123',
-          name: 'Viewer User',
-          type: 'viewer'
-        }
-      ]
+    setServerError(null)
 
-      // Find user by matching username and password
-      const user = users.find(
-        user =>
-          user.username === values.username && user.password === values.password
-      )
+    try {
+      const response = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values)
+      })
 
-      if (user) {
-        // Save userType, username, and name to localStorage
-        localStorage.setItem('userType', user.type)
-        localStorage.setItem('username', user.username)
-        localStorage.setItem('name', user.name)
+      const data = await response.json()
 
-        // Redirect to appropriate dashboard based on userType
-        router.push(`/${user.type}-dashboard`)
-      } else {
-        // Set global form error
-        setErrors({ username: 'Invalid username or password.' })
+      if (!response.ok) {
+        setErrors({ username: data.message || 'Invalid username or password' })
+        return
       }
 
-      setSubmitting(false)
-    }, 1500)
+      // Store JWT token
+      localStorage.setItem('token', data.access)
+      localStorage.setItem('refreshToken', data.refresh)
+
+      // Redirect to dashboard
+      router.push('/dashboard')
+    } catch (error) {
+      setServerError('Something went wrong. Please try again.')
+    }
+
+    setSubmitting(false)
   }
 
   return (
@@ -110,7 +95,7 @@ const LoginForm = () => {
             />
           </div>
 
-          <div className='-[300px] grid items-center gap-1.5'>
+          <div className='grid w-[300px] items-center gap-1.5'>
             <Label htmlFor='password'>Password</Label>
             <Field
               name='password'
@@ -127,14 +112,25 @@ const LoginForm = () => {
             />
           </div>
 
-          {/* Submit button */}
-          <Button
-            className='h-[50px] w-[300px] rounded-full bg-[#0575e6] p-5 text-sm text-white md:text-base'
-            type='submit'
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Logging in...' : 'Login'}
-          </Button>
+          {serverError && <p className='text-sm text-red-500'>{serverError}</p>}
+
+          <div className='flex flex-col items-center gap-3'>
+            <Button
+              className='h-[50px] w-[300px] rounded-full bg-[#053667] p-5 text-sm text-white md:text-base'
+              type='submit'
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Logging in...' : 'Login'}
+            </Button>
+            <Link href='/sign-up'>
+              <p className='text-center text-sm'>
+                Don't have an account?{' '}
+                <span className='font-bold text-[#053667] hover:bg-[#0f467c]'>
+                  Sign Up
+                </span>
+              </p>
+            </Link>
+          </div>
         </Form>
       )}
     </Formik>

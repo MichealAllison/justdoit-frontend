@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import Image from 'next/image'
 
 const Sidebar = () => {

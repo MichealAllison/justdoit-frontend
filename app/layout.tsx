@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'DashZone',
-  description: ' Multi-User Type Login System'
+  title: 'Just Do It',
+  description: ' Make your life better'
 }
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
-import ProtectedRoute from '@/components/ProtectedRoute'
-import Sidebar from '@/components/SideBar'
+import ProtectedRoute from '@/components/layout/ProtectedRoute'
+import Sidebar from '@/components/layout/SideBar'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
