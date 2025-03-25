@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 interface FormValues {
-  username: string
+  email: string
   password: string
 }
 
@@ -19,15 +19,15 @@ const LoginForm = () => {
   const [serverError, setServerError] = useState<string | null>(null)
 
   const initialValues: FormValues = {
-    username: '',
+    email: '',
     password: ''
   }
 
   const validate = (values: FormValues) => {
     const errors: Partial<FormValues> = {}
 
-    if (!values.username) {
-      errors.username = 'Username is required.'
+    if (!values.email) {
+      errors.email = 'Email is required.'
     }
 
     if (!values.password) {
@@ -53,7 +53,7 @@ const LoginForm = () => {
       const data = await response.json()
 
       if (!response.ok) {
-        setErrors({ username: data.message || 'Invalid username or password' })
+        setErrors({ email: data.message || 'Invalid email or password' })
         return
       }
 
@@ -79,17 +79,17 @@ const LoginForm = () => {
       {({ isSubmitting }) => (
         <Form className='mt-5 space-y-5'>
           <div className='grid w-[300px] items-center gap-1.5'>
-            <Label htmlFor='username'>Username</Label>
+            <Label htmlFor='email'>Email</Label>
             <Field
-              name='username'
+              name='email'
               type='text'
               as={Input}
               className='h-[50px] rounded-full p-5 text-sm md:text-base'
-              placeholder='Username'
-              aria-label='Username'
+              placeholder='Email'
+              aria-label='Email'
             />
             <ErrorMessage
-              name='username'
+              name='email'
               component='p'
               className='text-sm text-red-500'
             />
