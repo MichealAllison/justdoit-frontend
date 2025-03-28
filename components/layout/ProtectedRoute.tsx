@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
     if (!token) {
       setIsAuth(false)
-      router.push('/') // Redirect to login if not authenticated
+      router.push('/dashboard') // Redirect to login if not authenticated
     } else {
       setIsAuth(true)
     }
