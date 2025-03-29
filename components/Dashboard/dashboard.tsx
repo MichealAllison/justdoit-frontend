@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-import PriorityCard from '../Dashboard/components/priorityCard'
+import PriorityCard from './components/priorityCard'
+import { Button } from '../ui/button'
+import { LucidePlus } from 'lucide-react'
 
 // Priority task data
 const priority = [
@@ -32,60 +34,83 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  // Effect to handle authentication (disabled for development)
   useEffect(() => {
     setLoading(false)
-
-    /* Original authentication logic - commented out for development
-    if (typeof window !== 'undefined') {
-      const userType = localStorage.getItem('userType')
-      const isAuthenticated = !!userType
-
-      if (!isAuthenticated || userType !== 'viewer') {
-        router.push('/')
-      } else {
-        setLoading(false)
-      }
-    }
-    */
   }, [router])
 
-  // Loading state
   if (loading) {
     return <div>Loading...</div>
   }
 
   return (
-    <div className='h-screen w-full'>
-      {/* Welcome and Progress */}
-      <div className='flex flex-col overflow-hidden'>
-        <h1 className='text-2xl font-bold text-white'>Welcome Chris</h1>
-        <div className='flex gap-5'>
-          <p className='text-[#c9cbcc]'>Today's Progress</p>
-          <p className='text-[#007bff]'>5 tasks left</p>
+    <div className='min-h-screen w-full overflow-hidden'>
+      {/* Welcome message */}
+      <div className='static flex flex-col py-4 sm:py-6'>
+        <h1 className='text-xl font-bold text-white sm:text-2xl'>
+          Welcome Chris
+        </h1>
+        <div className='flex flex-wrap gap-2 sm:gap-4'>
+          <p className='text-sm text-gray-400'>Today's Progress</p>
+          <p className='text-sm text-blue-500'>5 tasks left</p>
         </div>
       </div>
 
-      {/* Priority Tasks */}
-      <div className='mt-10 w-full md:w-[500px]'>
-        <div className='flex items-center justify-between'>
-          <p className='text-xl font-bold text-white'>Priority Tasks</p>
-          <Link href='/priority-tasks' className='text-sm text-[#007bff]'>
-            View all
-          </Link>
+      <div className='mx-5'>
+        <div className='mt-6 w-full'>
+          <div className='mb-4 flex items-center justify-between'>
+            <p className='text-lg font-bold text-white sm:text-xl'>
+              Recent Tasks
+            </p>
+            <Link
+              href='/priority-tasks'
+              className='text-sm text-blue-500 hover:text-blue-700'
+            >
+              View all
+            </Link>
+          </div>
+          <div className='mt-4'>
+            <div className='flex gap-4 overflow-x-auto pb-2'>
+              {priority.map((item, index) => (
+                <div key={index} className='flex-shrink-0'>
+                  <PriorityCard
+                    priority={item.priority}
+                    title={item.title}
+                    description={item.description}
+                    date={item.date}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <div className='scrollbar-hide mt-5 flex gap-5 overflow-y-auto'>
-          {priority.map((item, index) => (
-            <PriorityCard
-              key={index}
-              priority={item.priority}
-              title={item.title}
-              description={item.description}
-              date={item.date}
-            />
-          ))}
+
+        <div className='mt-8 w-full'>
+          <div className='flex items-center justify-between'>
+            <p className='text-xl font-bold text-white'>Priority Tasks</p>
+            <Link href='/priority-tasks' className='text-sm text-blue-500'>
+              View all
+            </Link>
+          </div>
+          <div className='mt-4'>
+            <div className='flex gap-4 overflow-x-auto pb-2'>
+              {priority.map((item, index) => (
+                <div key={index} className='flex-shrink-0'>
+                  <PriorityCard
+                    priority={item.priority}
+                    title={item.title}
+                    description={item.description}
+                    date={item.date}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+
+      <Button className='fixed bottom-6 right-6 h-14 w-14 rounded-full bg-blue-500'>
+        <LucidePlus color='white' size={20} />
+      </Button>
     </div>
   )
 }

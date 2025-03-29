@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Sidebar />
 
       {/* Main Content */}
-      <main className='flex-1 p-6'>
+      <main className='flex-1 overflow-x-hidden p-6'>
         <ProtectedRoute>{children}</ProtectedRoute>
       </main>
     </div>

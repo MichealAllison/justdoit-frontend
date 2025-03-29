@@ -2,7 +2,7 @@ import Dashboard from '@/components/Dashboard/dashboard'
 
 export default function DashboardPage() {
   return (
-    <div className='overflow-hidden'>
+    <div className=''>
       <Dashboard />
     </div>
   )
