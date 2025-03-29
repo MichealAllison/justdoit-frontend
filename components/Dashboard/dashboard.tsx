@@ -27,6 +27,18 @@ const priority = [
     title: 'Create a new Bank Savings Account',
     description: 'Create a new Bank Savings Account for the user',
     date: '03/28/2025'
+  },
+  {
+    priority: 'Medium',
+    title: 'Create a new Bank Savings Account',
+    description: 'Create a new Bank Savings Account for the user',
+    date: '03/28/2025'
+  },
+  {
+    priority: 'Medium',
+    title: 'Create a new Bank Savings Account',
+    description: 'Create a new Bank Savings Account for the user',
+    date: '03/28/2025'
   }
 ]
 
@@ -69,7 +81,7 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className='mt-1'>
-            <div className='flex gap-4 overflow-x-auto pb-2'>
+            <div className='scrollbar-hide flex gap-4 overflow-x-auto pb-2'>
               {priority.map((item, index) => (
                 <div key={index} className='flex-shrink-0'>
                   <PriorityCard
@@ -92,7 +104,7 @@ const Dashboard = () => {
             </Link>
           </div>
           <div className='mt-4'>
-            <div className='flex gap-4 overflow-x-auto pb-2'>
+            <div className='scrollbar-hide flex gap-4 overflow-x-auto pb-2'>
               {priority.map((item, index) => (
                 <div key={index} className='flex-shrink-0'>
                   <PriorityCard
