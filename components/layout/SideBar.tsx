@@ -35,7 +35,7 @@ const Sidebar = () => {
   return (
     <>
       <Button
-        className='fixed right-4 top-4 z-50 rounded p-1 md:hidden'
+        className='fixed right-4 top-4 z-50 rounded bg-blue-500 px-2 py-2 md:hidden'
         onClick={toggleSidebar}
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
       >

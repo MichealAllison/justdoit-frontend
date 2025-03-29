@@ -55,7 +55,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className='mx-5'>
+      <div className='mx-1'>
         <div className='mt-6 w-full'>
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-lg font-bold text-white sm:text-xl'>
@@ -68,7 +68,7 @@ const Dashboard = () => {
               View all
             </Link>
           </div>
-          <div className='mt-4'>
+          <div className='mt-1'>
             <div className='flex gap-4 overflow-x-auto pb-2'>
               {priority.map((item, index) => (
                 <div key={index} className='flex-shrink-0'>
