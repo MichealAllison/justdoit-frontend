@@ -108,7 +108,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <Button className='fixed bottom-6 right-6 h-14 w-14 animate-ping rounded-full bg-blue-500 shadow-lg shadow-blue-500/70'>
+      <Button className='fixed bottom-6 right-6 h-14 w-14 animate-pulse rounded-full bg-blue-500 shadow-lg shadow-blue-500/70'>
         <LucidePlus color='white' size={20} />
       </Button>
     </div>
