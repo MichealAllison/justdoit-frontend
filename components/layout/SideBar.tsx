@@ -62,7 +62,7 @@ const Sidebar = () => {
               <>
                 <li>
                   <Link
-                    href='/'
+                    href='/dashboard'
                     className='block rounded-full px-4 py-2 hover:bg-[#1e1e1e]'
                   >
                     Task Manager
@@ -70,7 +70,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    href='/'
+                    href='/dashboard/priority-tasks'
                     className='block rounded-full px-4 py-2 hover:bg-[#1e1e1e]'
                   >
                     Priority Tasks
@@ -78,7 +78,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    href='/'
+                    href='/dashboard/completed-tasks'
                     className='block rounded-full px-4 py-2 hover:bg-[#1e1e1e]'
                   >
                     Completed Tasks

@@ -21,7 +21,7 @@ const PriorityCard = ({
   date
 }: PriorityCardProps) => {
   return (
-    <div className='w-[400px] rounded-2xl bg-[#3a3939] p-4'>
+    <div className='w-[320px] rounded-2xl bg-[#3a3939] p-4'>
       <div className='flex items-center justify-between'>
         <Badge
           variant='default'
