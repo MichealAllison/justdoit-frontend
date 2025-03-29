@@ -55,7 +55,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className='mx-1'>
+      <div>
         <div className='mt-6 w-full'>
           <div className='mb-4 flex items-center justify-between'>
             <p className='text-lg font-bold text-white sm:text-xl'>
