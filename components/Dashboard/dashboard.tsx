@@ -14,31 +14,41 @@ const priority = [
     priority: 'High',
     title: 'Create a new Bank Savings Account',
     description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025'
+    date: '03/28/2025',
+    category: 'Banking',
+    id: 1
   },
   {
     priority: 'Low',
     title: 'Create a new Bank Savings Account',
     description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025'
+    date: '03/28/2025',
+    category: 'Banking',
+    id: 2
   },
   {
     priority: 'Medium',
     title: 'Create a new Bank Savings Account',
     description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025'
+    date: '03/28/2025',
+    category: 'Banking',
+    id: 3
   },
   {
     priority: 'Medium',
     title: 'Create a new Bank Savings Account',
     description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025'
+    date: '03/28/2025',
+    category: 'Banking',
+    id: 4
   },
   {
     priority: 'Medium',
     title: 'Create a new Bank Savings Account',
     description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025'
+    date: '03/28/2025',
+    category: 'Banking',
+    id: 5
   }
 ]
 
@@ -89,6 +99,8 @@ const Dashboard = () => {
                     title={item.title}
                     description={item.description}
                     date={item.date}
+                    category={item.category}
+                    id={item.id}
                   />
                 </div>
               ))}
@@ -112,6 +124,8 @@ const Dashboard = () => {
                     title={item.title}
                     description={item.description}
                     date={item.date}
+                    category={item.category}
+                    id={item.id}
                   />
                 </div>
               ))}
@@ -120,7 +134,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <Button className='fixed bottom-6 right-6 h-14 w-14 animate-pulse rounded-full bg-blue-500 shadow-lg shadow-blue-500/70'>
+      <Button
+        className='fixed bottom-6 right-6 h-14 w-14 animate-pulse rounded-full bg-blue-500 shadow-lg shadow-blue-500/70'
+        onClick={() => router.push('/create-task')}
+      >
         <LucidePlus color='white' size={20} />
       </Button>
     </div>
