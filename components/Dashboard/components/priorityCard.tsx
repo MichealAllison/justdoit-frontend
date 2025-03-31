@@ -1,12 +1,13 @@
 import { Badge } from '@/components/ui/badge'
 import React from 'react'
 import Link from 'next/link'
+import { Task } from '../type'
 
-interface PriorityCardProps {
+interface PriorityCardProps extends Task {
   priority: string
   title: string
   description: string
-  date: string
+  dueDate: string
   category: string
   id: number
 }
@@ -21,7 +22,7 @@ const PriorityCard = ({
   priority,
   title,
   description,
-  date,
+  dueDate,
   category,
   id
 }: PriorityCardProps) => {
@@ -35,7 +36,7 @@ const PriorityCard = ({
           >
             {priority}
           </Badge>
-          <p className='text-sm text-[#e9eaeb]'>{date}</p>
+          <p className='text-sm text-[#e9eaeb]'>{dueDate}</p>
         </div>
         <div className='mt-4 space-y-2'>
           <h3 className='text-xl font-bold text-[#e9eaeb]'>{title}</h3>

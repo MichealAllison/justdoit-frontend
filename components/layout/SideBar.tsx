@@ -70,10 +70,10 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    href='/dashboard/priority-tasks'
+                    href='/dashboard/all-tasks'
                     className='block rounded-full px-4 py-2 hover:bg-[#1e1e1e]'
                   >
-                    Priority Tasks
+                    All Tasks
                   </Link>
                 </li>
                 <li>

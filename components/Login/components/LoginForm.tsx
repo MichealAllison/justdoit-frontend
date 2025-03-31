@@ -7,7 +7,9 @@ import { Input } from '../../ui/input'
 import { Label } from '../../ui/label'
 import { FormikHelpers } from 'formik'
 import Link from 'next/link'
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { Loader2 } from 'lucide-react'
 
 interface FormValues {
   email: string
@@ -15,8 +17,61 @@ interface FormValues {
 }
 
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const accessToken = localStorage.getItem('accessToken')
+
+      if (accessToken) {
+        try {
+          // Verify token validity with API
+          const response = await axios.get(
+            'https://todo-app-api-dg8b.onrender.com/api/user/verify/',
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            }
+          )
+
+          if (response.status === 200) {
+            router.push('/dashboard')
+          }
+        } catch (error) {
+          // Token invalid or expired, try to refresh
+          const refreshToken = localStorage.getItem('refreshToken')
+          if (refreshToken) {
+            try {
+              const refreshResponse = await axios.post(
+                'https://todo-app-api-dg8b.onrender.com/api/user/refresh/',
+                { refresh: refreshToken }
+              )
+
+              if (
+                refreshResponse.status === 200 &&
+                refreshResponse.data.access
+              ) {
+                localStorage.setItem('accessToken', refreshResponse.data.access)
+                router.push('/dashboard')
+              } else {
+                // Clear invalid tokens
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+              }
+            } catch (refreshError) {
+              // Clear invalid tokens
+              localStorage.removeItem('accessToken')
+              localStorage.removeItem('refreshToken')
+            }
+          }
+        }
+      }
+    }
+
+    checkAuth()
+  }, [router])
 
   const initialValues: FormValues = {
     email: '',
@@ -41,33 +96,42 @@ const LoginForm = () => {
     values: FormValues,
     { setSubmitting, setErrors }: FormikHelpers<FormValues>
   ) => {
-    setServerError(null)
-
     try {
-      const response = await fetch('http://localhost:8000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values)
-      })
+      setLoading(true)
+      console.log('Login form values:', values)
 
-      const data = await response.json()
+      const response = await axios.post(
+        'https://todo-app-api-dg8b.onrender.com/api/user/login/',
+        {
+          email: values.email,
+          password: values.password
+        }
+      )
 
-      if (!response.ok) {
-        setErrors({ email: data.message || 'Invalid email or password' })
-        return
+      console.log('Login Response:', response)
+
+      if (response.status === 200) {
+        // Store both tokens if available
+        if (response.data.access) {
+          localStorage.setItem('accessToken', response.data.access)
+        }
+        if (response.data.refresh) {
+          localStorage.setItem('refreshToken', response.data.refresh)
+        }
+        // For backward compatibility
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token)
+        }
+
+        // Redirect to dashboard
+        router.push('/dashboard')
+      } else {
+        console.error('Login failed')
       }
-
-      // Store JWT token
-      localStorage.setItem('token', data.access)
-      localStorage.setItem('refreshToken', data.refresh)
-
-      // Redirect to dashboard
-      router.push('/dashboard')
-    } catch (error) {
-      setServerError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+      setSubmitting(false)
     }
-
-    setSubmitting(false)
   }
 
   return (
@@ -112,15 +176,14 @@ const LoginForm = () => {
             />
           </div>
 
-          {serverError && <p className='text-sm text-red-500'>{serverError}</p>}
-
           <div className='flex flex-col items-center gap-3'>
             <Button
               className='h-[50px] w-[300px] rounded-full bg-[#053667] p-5 text-sm text-white md:text-base'
               type='submit'
-              disabled={isSubmitting}
+              disabled={isSubmitting || loading}
             >
               {isSubmitting ? 'Logging in...' : 'Login'}
+              {loading && <Loader2 className='ml-2 h-4 w-4 animate-spin' />}
             </Button>
             <Link href='/sign-up'>
               <p className='text-center text-sm'>

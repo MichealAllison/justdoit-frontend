@@ -13,23 +13,35 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-
+import { taskData } from '@/components/Dashboard/data/taskData'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
+import { CalendarIcon, LucideCalendar } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
 interface TaskFormValues {
   title: string
   description: string
   priority: string
   dueDate: string
+  category: string
 }
 
 const CreateTaskForm = () => {
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
+  const [dueDate, setDueDate] = useState<Date | null>(null)
 
   const initialValues: TaskFormValues = {
     title: '',
     description: '',
     priority: '',
-    dueDate: ''
+    dueDate: '',
+    category: ''
   }
 
   const validate = (values: TaskFormValues) => {
@@ -51,11 +63,26 @@ const CreateTaskForm = () => {
       errors.dueDate = 'Due date is required'
     }
 
+    if (!values.category) {
+      errors.category = 'Category is required'
+    }
+
     return errors
   }
 
   const handleSubmit = async (values: TaskFormValues) => {
     try {
+      const newId = Math.max(...taskData.map(task => task.id), 0) + 1
+
+      taskData.push({
+        id: newId,
+        title: values.title,
+        description: values.description,
+        priority: values.priority,
+        dueDate: values.dueDate,
+        category: values.category || '',
+        status: 'Not Started'
+      })
       router.push('/dashboard')
     } catch (error) {
       setServerError('Failed to create task. Please try again.')
@@ -133,22 +160,36 @@ const CreateTaskForm = () => {
             />
           </div>
 
-          <div className='space-y-2'>
-            <Label className='text-white' htmlFor='dueDate'>
-              Due Date
-            </Label>
-            <Field
-              name='dueDate'
-              type='datetime-local'
-              as={Input}
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
-            />
-            <ErrorMessage
-              name='dueDate'
-              component='p'
-              className='text-sm text-red-500'
-            />
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant='outline'
+                className={cn(
+                  'w-full justify-start rounded-lg border-none bg-white/10 p-2 text-left text-white sm:p-4',
+                  !dueDate && 'text-muted-foreground'
+                )}
+              >
+                <LucideCalendar
+                  size={20}
+                  color='white
+                '
+                />
+                {dueDate ? (
+                  format(dueDate, 'PPP')
+                ) : (
+                  <span className='text-white'>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-auto bg-white p-0 text-black'>
+              <Calendar
+                mode='single'
+                selected={dueDate || undefined}
+                onSelect={(day: Date | undefined) => setDueDate(day || null)}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
 
           <div className='space-y-2'>
             <Label className='text-white' htmlFor='category'>

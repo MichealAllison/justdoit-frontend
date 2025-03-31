@@ -1,79 +1,66 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-
 import PriorityCard from './components/priorityCard'
 import { Button } from '../ui/button'
 import { LucidePlus } from 'lucide-react'
-
-// Priority task data
-const priority = [
-  {
-    priority: 'High',
-    title: 'Create a new Bank Savings Account',
-    description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025',
-    category: 'Banking',
-    id: 1
-  },
-  {
-    priority: 'Low',
-    title: 'Create a new Bank Savings Account',
-    description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025',
-    category: 'Banking',
-    id: 2
-  },
-  {
-    priority: 'Medium',
-    title: 'Create a new Bank Savings Account',
-    description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025',
-    category: 'Banking',
-    id: 3
-  },
-  {
-    priority: 'Medium',
-    title: 'Create a new Bank Savings Account',
-    description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025',
-    category: 'Banking',
-    id: 4
-  },
-  {
-    priority: 'Medium',
-    title: 'Create a new Bank Savings Account',
-    description: 'Create a new Bank Savings Account for the user',
-    date: '03/28/2025',
-    category: 'Banking',
-    id: 5
-  }
-]
+import { taskData } from './data/taskData'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import UserList from './components/UserList'
 
 const Dashboard = () => {
+  const [users, setUsers] = useState([])
+  const [Name, setName] = useState('')
   const [loading, setLoading] = useState(true)
+
   const router = useRouter()
 
   useEffect(() => {
-    setLoading(false)
-  }, [router])
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(
+          'https://todo-app-api-dg8b.onrender.com/api/user/users/'
+        )
+        console.log('API Response:', response.data)
+        setUsers(response.data)
+      } catch (error) {
+        console.error('Error fetching users:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
+    fetchUsers()
+  }, [])
 
   return (
     <div className='min-h-screen w-full overflow-hidden'>
       {/* Welcome message */}
       <div className='static flex flex-col py-4 sm:py-6'>
-        <h1 className='text-xl font-bold text-white sm:text-2xl'>
-          Welcome Chris
-        </h1>
+        <div className='flex items-center justify-between'>
+          <h1 className='text-xl font-bold text-white sm:text-2xl'>
+            Welcome
+            {Array.isArray(users) && users.length > 0 ? (
+              users.map((user: any) => (
+                <span className='ml-2' key={user.id}>
+                  {user.name || user.username || JSON.stringify(user)}
+                </span>
+              ))
+            ) : (
+              <span>No users found</span>
+            )}
+          </h1>
+        </div>
         <div className='flex flex-wrap gap-2 sm:gap-4'>
           <p className='text-sm text-gray-400'>Today's Progress</p>
-          <p className='text-sm text-blue-500'>5 tasks left</p>
+          <div className='flex items-center gap-2'>
+            <p className='text-sm text-blue-500'>
+              {taskData.filter(task => task.status === 'In Progress').length}
+            </p>
+            <p className='text-sm text-blue-500'>tasks left</p>
+          </div>
         </div>
       </div>
 
@@ -92,13 +79,14 @@ const Dashboard = () => {
           </div>
           <div className='mt-1'>
             <div className='scrollbar-hide flex gap-4 overflow-x-auto pb-2'>
-              {priority.map((item, index) => (
+              {taskData.map((item, index) => (
                 <div key={index} className='flex-shrink-0'>
                   <PriorityCard
+                    status={item.status}
                     priority={item.priority}
                     title={item.title}
                     description={item.description}
-                    date={item.date}
+                    dueDate={item.dueDate}
                     category={item.category}
                     id={item.id}
                   />
@@ -107,23 +95,27 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        <div className='mt-8 w-full'>
+          <UserList />
+        </div>
 
         <div className='mt-8 w-full'>
           <div className='flex items-center justify-between'>
-            <p className='text-xl font-bold text-white'>Priority Tasks</p>
+            <p className='text-xl font-bold text-white'>All Tasks</p>
             <Link href='/priority-tasks' className='text-sm text-blue-500'>
               View all
             </Link>
           </div>
           <div className='mt-4'>
             <div className='scrollbar-hide flex gap-4 overflow-x-auto pb-2'>
-              {priority.map((item, index) => (
+              {taskData.map((item, index) => (
                 <div key={index} className='flex-shrink-0'>
                   <PriorityCard
+                    status={item.status}
                     priority={item.priority}
                     title={item.title}
                     description={item.description}
-                    date={item.date}
+                    dueDate={item.dueDate}
                     category={item.category}
                     id={item.id}
                   />
