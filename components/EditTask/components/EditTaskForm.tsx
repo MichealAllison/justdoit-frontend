@@ -99,25 +99,27 @@ const EditTaskForm = () => {
     try {
       const token = localStorage.getItem('accessToken')
 
-      // ... existing code ...
-      const response = await axios.put(
-        `https://todo-app-api-dg8b.onrender.com/api/task/api/v1/tasks/{id}/`,
+      const response = await fetch(
+        `https://todo-app-api-dg8b.onrender.com/api/task/api/v1/tasks/${id}/`,
         {
-          title: values.title,
-          description: values.description,
-          priority: values.priority,
-          due_date: values.due_date,
-          status: values.status
-        },
-        {
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
-          }
+          },
+          body: JSON.stringify({
+            title: values.title,
+            description: values.description,
+            priority: values.priority.toLowerCase(),
+            due_date: values.due_date,
+            status: values.status
+          })
         }
       )
 
-      router.push('/dashboard')
+      if (response.status === 200) {
+        router.push('/dashboard')
+      }
     } catch (error) {
       console.error(
         'Error updating task:',

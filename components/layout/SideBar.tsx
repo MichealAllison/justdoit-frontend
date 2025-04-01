@@ -19,34 +19,60 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      // Get the refresh token from localStorage
+      // Try to get the refresh token from localStorage
       const refreshToken = localStorage.getItem('refresh_token')
 
+      // If the token is missing, clear session and redirect
+      if (!refreshToken) {
+        console.warn('No refresh token found, clearing session.')
+        clearSession()
+        return
+      }
+
       // Call the logout API endpoint
-      const response = await fetch('/api/user/logout/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ refresh_token: refreshToken })
-      })
+      const response = await fetch(
+        'https://todo-app-api-dg8b.onrender.com/api/user/logout/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refresh_token: refreshToken })
+        }
+      )
 
       if (!response.ok) {
-        console.error('Logout failed:', await response.text())
+        const errorText = await response.text()
+        console.error('Logout failed:', errorText)
       }
+
+      console.log('Logout successful')
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
       // Clear user session from localStorage
-      localStorage.removeItem('userType')
-      localStorage.removeItem('name')
-      localStorage.removeItem('username')
-      localStorage.removeItem('refresh_token')
-      localStorage.removeItem('access_token')
+      clearSession()
+    }
+  }
+
+  // Helper function to clear session and redirect
+  const clearSession = () => {
+    try {
+      ;[
+        'userType',
+        'name',
+        'username',
+        'refresh_token',
+        'access_token'
+      ].forEach(key => {
+        localStorage.removeItem(key)
+      })
       setUserType(null)
 
       // Redirect to login page
-      router.push('/login')
+      router.replace('/login')
+    } catch (storageError) {
+      console.error('Error clearing local storage:', storageError)
     }
   }
 

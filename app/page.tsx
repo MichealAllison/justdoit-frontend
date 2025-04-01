@@ -1,9 +1,6 @@
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 export default function Home() {
-  return (
-    <div>
-      <h1>hello</h1>
-    </div>
-  )
+  redirect('/login')
 }

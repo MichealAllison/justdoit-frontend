@@ -34,7 +34,7 @@ const TaskCard = ({
   id
 }: TaskCardProps) => {
   return (
-    <div className='w-[320px] rounded-2xl bg-[#3a3939] p-4'>
+    <div className='h-[200px] w-[320px] rounded-2xl bg-[#3a3939] p-4'>
       <Link href={`/preview/${id}`}>
         <div className='flex items-center justify-between'>
           <Badge
@@ -43,10 +43,15 @@ const TaskCard = ({
           >
             {priority}
           </Badge>
+          <p className='text-sm text-white/50'>
+            {format(new Date(due_date), 'dd/MM/yyyy')}
+          </p>
         </div>
         <div className='mt-4 space-y-2'>
           <h3 className='text-xl font-bold text-[#e9eaeb]'>{title}</h3>
-          <p className='text-sm text-[#e9eaeb]'>{description}</p>
+          <p className='h-[40px] overflow-hidden text-sm text-[#e9eaeb]'>
+            {description}
+          </p>
         </div>
         <div className='mt-4 space-y-2'>
           <Badge

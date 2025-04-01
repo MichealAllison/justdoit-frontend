@@ -1,7 +1,5 @@
 'use client'
 import { LucideArrowLeft } from 'lucide-react'
-import { Task } from '@/components/Dashboard/type'
-import { LucideEdit3 } from 'lucide-react'
 import Link from 'next/link'
 import { useQuery } from '@tanstack/react-query'
 import { getTaskById } from '@/components/Dashboard/data/taskData'
@@ -20,14 +18,18 @@ const PreviewTask = () => {
   })
   const priority = task?.priority
   const status = task?.status
-  const priorityColor =
-    priority === 'High'
-      ? 'bg-red-500'
-      : priority === 'Medium'
-        ? 'bg-yellow-500'
-        : 'bg-green-500'
-  const statusColor = status === 'Completed' ? 'bg-green-500' : 'bg-red-500'
 
+  const priorityColors = {
+    high: 'bg-red-500',
+    medium: 'bg-yellow-500',
+    low: 'bg-green-500'
+  }
+
+  const statusColors = {
+    pending: 'bg-yellow-500/50',
+    in_progress: 'bg-blue-500/50',
+    completed: 'bg-green-500/50'
+  }
   const created_at = task?.created_at
     ? format(new Date(task.created_at), 'yyyy-MM-dd')
     : ''
@@ -36,7 +38,7 @@ const PreviewTask = () => {
     : ''
 
   return (
-    <div className='w-full'>
+    <div className='w-[500px]'>
       <Link href='/dashboard'>
         <LucideArrowLeft size={20} color='white' />
       </Link>
@@ -52,19 +54,29 @@ const PreviewTask = () => {
       </div>
       <div className='mt-5'>
         <p className='text-sm text-white/50'>Status</p>
-        <Badge variant='default' className={statusColor}>
+        <Badge
+          variant='default'
+          className={statusColors[status as keyof typeof statusColors]}
+        >
           {status}
         </Badge>
       </div>
       <div className='mt-5'>
         <p className='text-sm text-white/50'>Priority</p>
-        <Badge variant='default' className={priorityColor}>
+        <Badge
+          variant='default'
+          className={priorityColors[priority as keyof typeof priorityColors]}
+        >
           {priority}
         </Badge>
       </div>
       <div className='mt-5'>
         <p className='text-sm text-white/50'>Created At</p>
         <p className='text-white'>{created_at}</p>
+      </div>
+      <div className='mt-5'>
+        <p className='text-sm text-white/50'>Due Date</p>
+        <p className='text-white'>{due_date}</p>
       </div>
 
       <Button

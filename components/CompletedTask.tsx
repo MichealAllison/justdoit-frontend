@@ -58,7 +58,7 @@ const CompletedTask = () => {
                   priority={item.priority}
                   title={item.title}
                   description={item.description}
-                  dueDate={item.dueDate}
+                  due_date={item.due_date}
                   id={item.id}
                 />
               </div>
