@@ -38,7 +38,7 @@ const PreviewTask = () => {
     : ''
 
   return (
-    <div className='w-[500px]'>
+    <div className='w-full md:w-[500px]'>
       <Link href='/dashboard'>
         <LucideArrowLeft size={20} color='white' />
       </Link>
@@ -82,7 +82,7 @@ const PreviewTask = () => {
       <Button
         type='submit'
         onClick={() => router.push(`/edit-task/${id}`)}
-        className='mt-10 w-full rounded-lg border-none bg-blue-500 p-2 text-white sm:max-w-md md:max-w-lg lg:max-w-xl'
+        className='mt-10 w-full rounded-lg border-none bg-blue-500 p-2 text-white sm:max-w-md md:w-full md:max-w-lg lg:max-w-xl'
       >
         Edit Task
       </Button>
