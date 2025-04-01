@@ -1,15 +1,17 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import EditTaskForm from './components/EditTaskForm'
 import { LucideArrowLeft, LucideTrash } from 'lucide-react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
+import DeleteModal from './components/DeleteModal'
 
 const EditTask = () => {
   const { id } = useParams()
   const router = useRouter()
+  const [open, setOpen] = useState(false)
 
   const handleDelete = async () => {
     const token = localStorage.getItem('accessToken')
@@ -27,6 +29,7 @@ const EditTask = () => {
       )
 
       if (response.ok) {
+        setOpen(false)
         router.push('/dashboard')
       } else {
         console.error('Failed to delete the task.')
@@ -45,11 +48,24 @@ const EditTask = () => {
           </a>
           <h1 className='text-2xl font-bold text-white'>Edit Task</h1>
         </div>
-        <div className='flex items-center gap-2'>
-          <Button variant='destructive' size='sm' onClick={handleDelete}>
-            <LucideTrash size={20} color='red' />
-          </Button>
-        </div>
+
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <div className='mt-20 flex items-center gap-2'>
+              <Button
+                variant='default'
+                size='sm'
+                className='rounded-full bg-red-500 p-5 text-white hover:bg-red-600'
+              >
+                <LucideTrash size={20} color='white' />
+                <p className='text-sm text-white'>Delete</p>
+              </Button>
+            </div>
+          </DialogTrigger>
+          <DialogContent>
+            <DeleteModal setOpen={setOpen} handleDelete={handleDelete} />
+          </DialogContent>
+        </Dialog>
       </div>
       <div className='mt-5'>
         <EditTaskForm />

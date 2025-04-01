@@ -61,7 +61,8 @@ const EditTaskForm = () => {
             setInitialValues({
               title: task.title,
               description: task.description,
-              priority: task.priority,
+              priority:
+                task.priority.charAt(0).toUpperCase() + task.priority.slice(1),
               due_date: task.due_date,
               status: task.status
             })
@@ -137,7 +138,7 @@ const EditTaskForm = () => {
       enableReinitialize
     >
       {({ isSubmitting }) => (
-        <Form className='space-y-4 rounded-lg p-4 sm:p-6 lg:w-[1000px] lg:p-8'>
+        <Form className='space-y-4 rounded-lg p-4 sm:p-2 lg:w-[1000px] lg:p-2'>
           <div className='space-y-2'>
             <Label className='text-white'>Title</Label>
             <Field
@@ -145,7 +146,7 @@ const EditTaskForm = () => {
               type='text'
               as={Input}
               placeholder='Task title'
-              className='w-full bg-white/10 p-2 text-white'
+              className='w-full rounded-full border-none bg-white/10 p-5 text-sm text-white sm:p-5 md:text-base'
             />
             <ErrorMessage name='title' component='p' className='text-red-500' />
           </div>
@@ -155,7 +156,7 @@ const EditTaskForm = () => {
             <Field
               name='description'
               as='textarea'
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
+              className='w-full rounded-lg border-none bg-white/10 px-5 py-2 text-sm text-white sm:p-4 md:text-base'
               placeholder='Task description'
             />
             <ErrorMessage
@@ -173,7 +174,7 @@ const EditTaskForm = () => {
                   onValueChange={value => form.setFieldValue('priority', value)}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'>
+                  <SelectTrigger className='w-full rounded-full border-none bg-white/10 p-5 text-white sm:p-5 md:text-base'>
                     <SelectValue placeholder='Select priority' />
                   </SelectTrigger>
                   <SelectContent className='bg-white text-black'>
@@ -196,7 +197,7 @@ const EditTaskForm = () => {
                   onValueChange={value => form.setFieldValue('status', value)}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'>
+                  <SelectTrigger className='w-full rounded-full border-none bg-white/10 p-5 text-white sm:p-5 md:text-base'>
                     <SelectValue placeholder='Select status' />
                   </SelectTrigger>
                   <SelectContent className='bg-white text-black'>
@@ -223,7 +224,7 @@ const EditTaskForm = () => {
                     <Button
                       variant='outline'
                       className={cn(
-                        'w-full justify-start rounded-lg border-none bg-white/10 p-2 text-left text-white sm:p-4',
+                        'w-full justify-start rounded-full border-none bg-white/10 p-5 text-left text-white sm:p-5 md:text-base',
                         !dueDate && 'text-muted-foreground'
                       )}
                     >
@@ -261,11 +262,11 @@ const EditTaskForm = () => {
 
           {serverError && <p className='text-red-500'>{serverError}</p>}
 
-          <div className='flex gap-4'>
+          <div className='flex flex-col gap-4 sm:flex-row'>
             <Button
               type='submit'
               disabled={isSubmitting}
-              className='rounded-lg border-none bg-blue-500 p-2 text-white sm:p-4'
+              className='rounded-full border-none bg-blue-500 p-5 text-white sm:p-5 md:text-base'
             >
               Update Task
             </Button>
@@ -273,7 +274,7 @@ const EditTaskForm = () => {
               type='button'
               variant='outline'
               onClick={() => router.back()}
-              className='rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
+              className='w-full rounded-full bg-white p-5 text-black hover:bg-gray-200'
             >
               Cancel
             </Button>

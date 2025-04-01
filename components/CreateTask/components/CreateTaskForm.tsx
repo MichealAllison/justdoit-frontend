@@ -112,7 +112,7 @@ const CreateTaskForm = () => {
       onSubmit={handleSubmit}
     >
       {({ isSubmitting, setFieldValue, values }) => (
-        <Form className='space-y-4 rounded-lg p-4 sm:p-6 lg:w-[1000px] lg:p-8'>
+        <Form className='space-y-4 rounded-lg p-4 sm:p-2 lg:w-[1000px] lg:p-2'>
           <div className='space-y-2'>
             <Label className='text-white' htmlFor='title'>
               Title
@@ -121,7 +121,7 @@ const CreateTaskForm = () => {
               name='title'
               type='text'
               as={Input}
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
+              className='w-full rounded-full border-none bg-white/10 p-5 text-sm text-white sm:p-5 md:text-base'
               placeholder='Task title'
             />
             <ErrorMessage
@@ -138,7 +138,7 @@ const CreateTaskForm = () => {
             <Field
               name='description'
               as='textarea'
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
+              className='w-full rounded-lg border-none bg-white/10 px-5 py-2 text-sm text-white sm:p-4 md:text-base'
               placeholder='Task description'
             />
             <ErrorMessage
@@ -158,7 +158,7 @@ const CreateTaskForm = () => {
                   onValueChange={value => form.setFieldValue('priority', value)}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'>
+                  <SelectTrigger className='w-full rounded-full border-none bg-white/10 p-5 text-white sm:p-5 md:text-base'>
                     <SelectValue placeholder='Select priority' />
                   </SelectTrigger>
                   <SelectContent className='bg-white text-black'>
@@ -186,7 +186,7 @@ const CreateTaskForm = () => {
                   onValueChange={value => form.setFieldValue('status', value)}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'>
+                  <SelectTrigger className='w-full rounded-full border-none bg-white/10 p-5 text-white sm:p-5 md:text-base'>
                     <SelectValue placeholder='Select status' />
                   </SelectTrigger>
                   <SelectContent className='bg-white text-black'>
@@ -213,7 +213,7 @@ const CreateTaskForm = () => {
                 <Button
                   variant='outline'
                   className={cn(
-                    'border-n one w-full justify-start rounded-lg bg-white/10 p-2 text-left text-white sm:p-4',
+                    'border-n one w-full justify-start rounded-full border-none bg-white/10 p-5 text-left text-white sm:p-5 md:text-base',
                     !dueDate && 'text-muted-foreground'
                   )}
                 >
@@ -225,7 +225,7 @@ const CreateTaskForm = () => {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className='w-auto bg-white p-0 text-black'>
+              <PopoverContent className='w-auto bg-[#1e1e1e] p-0 text-white'>
                 <Calendar
                   mode='single'
                   selected={dueDate || undefined}
@@ -252,7 +252,7 @@ const CreateTaskForm = () => {
             <Button
               type='submit'
               disabled={isSubmitting}
-              className='w-full bg-blue-500 text-white hover:bg-blue-600'
+              className='w-full rounded-full bg-blue-500 p-5 text-white hover:bg-blue-600'
             >
               Create Task
             </Button>
@@ -260,7 +260,7 @@ const CreateTaskForm = () => {
               type='button'
               variant='outline'
               onClick={() => router.back()}
-              className='w-full bg-white text-black hover:bg-gray-200'
+              className='w-full rounded-full bg-white p-5 text-black hover:bg-gray-200'
             >
               Cancel
             </Button>
