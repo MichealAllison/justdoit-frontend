@@ -17,15 +17,37 @@ const Sidebar = () => {
     setUserType(storedUserType)
   }, [])
 
-  const handleLogout = () => {
-    // Clear user session
-    localStorage.removeItem('userType')
-    localStorage.removeItem('name')
-    localStorage.removeItem('username')
-    setUserType(null)
+  const handleLogout = async () => {
+    try {
+      // Get the refresh token from localStorage
+      const refreshToken = localStorage.getItem('refresh_token')
 
-    // Redirect to login page
-    router.push('/')
+      // Call the logout API endpoint
+      const response = await fetch('/api/user/logout/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ refresh_token: refreshToken })
+      })
+
+      if (!response.ok) {
+        console.error('Logout failed:', await response.text())
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      // Clear user session from localStorage
+      localStorage.removeItem('userType')
+      localStorage.removeItem('name')
+      localStorage.removeItem('username')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('access_token')
+      setUserType(null)
+
+      // Redirect to login page
+      router.push('/login')
+    }
   }
 
   const toggleSidebar = () => {
@@ -47,7 +69,7 @@ const Sidebar = () => {
       </Button>
 
       <aside
-        className={`fixed left-0 top-0 flex h-full w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#053667] p-4 text-white transition-transform ${
+        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#053667] p-4 text-white transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
         style={{ height: '100vh', overflowY: 'scroll' }} // Ensuring full height with scroll
@@ -70,7 +92,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    href='/dashboard/all-tasks'
+                    href='/all-tasks'
                     className='block rounded-full px-4 py-2 hover:bg-[#1e1e1e]'
                   >
                     All Tasks
@@ -78,7 +100,7 @@ const Sidebar = () => {
                 </li>
                 <li>
                   <Link
-                    href='/dashboard/completed-tasks'
+                    href='/completed-task'
                     className='block rounded-full px-4 py-2 hover:bg-[#1e1e1e]'
                   >
                     Completed Tasks

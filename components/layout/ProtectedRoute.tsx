@@ -4,28 +4,24 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAuth, setIsAuth] = useState<boolean | null>(true) // Set default to true for development
+  const [isAuth, setIsAuth] = useState<boolean | null>(null)
   const router = useRouter()
 
-  // Temporarily comment out the authentication check during development
-  /*
   useEffect(() => {
-    const token =
-      typeof window !== 'undefined' ? localStorage.getItem('token') : null
+    const accessToken =
+      typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null
 
-    if (!token) {
+    if (!accessToken) {
       setIsAuth(false)
-      router.push('/dashboard')
+      router.push('/login')
     } else {
       setIsAuth(true)
     }
   }, [router])
-  */
 
-  // Prevent rendering until authentication is checked
   if (isAuth === null) return null
 
-  return <>{children}</>
+  return isAuth ? <>{children}</> : null
 }
 
 export default ProtectedRoute

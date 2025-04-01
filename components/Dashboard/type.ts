@@ -3,8 +3,7 @@ export type Task = {
   title: string
   description: string
   priority: string
-  category: string
-  dueDate: string
+  due_date: string
   status: string
 }
 

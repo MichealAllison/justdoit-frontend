@@ -13,22 +13,22 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { taskData } from '@/components/Dashboard/data/taskData'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { CalendarIcon, LucideCalendar } from 'lucide-react'
+import { LucideCalendar } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
 import { format } from 'date-fns'
+
 interface TaskFormValues {
   title: string
   description: string
   priority: string
   dueDate: string
-  category: string
+  status: string
 }
 
 const CreateTaskForm = () => {
@@ -41,7 +41,7 @@ const CreateTaskForm = () => {
     description: '',
     priority: '',
     dueDate: '',
-    category: ''
+    status: ''
   }
 
   const validate = (values: TaskFormValues) => {
@@ -63,8 +63,8 @@ const CreateTaskForm = () => {
       errors.dueDate = 'Due date is required'
     }
 
-    if (!values.category) {
-      errors.category = 'Category is required'
+    if (!values.status) {
+      errors.status = 'Status is required'
     }
 
     return errors
@@ -72,19 +72,35 @@ const CreateTaskForm = () => {
 
   const handleSubmit = async (values: TaskFormValues) => {
     try {
-      const newId = Math.max(...taskData.map(task => task.id), 0) + 1
+      const token = localStorage.getItem('accessToken')
 
-      taskData.push({
-        id: newId,
-        title: values.title,
-        description: values.description,
-        priority: values.priority,
-        dueDate: values.dueDate,
-        category: values.category || '',
-        status: 'Not Started'
-      })
+      const response = await fetch(
+        'https://todo-app-api-dg8b.onrender.com/api/task/api/v1/tasks/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title: values.title,
+            description: values.description,
+            priority: values.priority,
+            dueDate: values.dueDate,
+            status: values.status
+          })
+        }
+      )
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.detail || 'Failed to create task')
+      }
+
+      router.refresh()
       router.push('/dashboard')
     } catch (error) {
+      console.error('Error creating task:', error)
       setServerError('Failed to create task. Please try again.')
     }
   }
@@ -95,7 +111,7 @@ const CreateTaskForm = () => {
       validate={validate}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, setFieldValue, values }) => (
         <Form className='space-y-4 rounded-lg p-4 sm:p-6 lg:w-[1000px] lg:p-8'>
           <div className='space-y-2'>
             <Label className='text-white' htmlFor='title'>
@@ -146,9 +162,9 @@ const CreateTaskForm = () => {
                     <SelectValue placeholder='Select priority' />
                   </SelectTrigger>
                   <SelectContent className='bg-white text-black'>
-                    <SelectItem value='High'>High</SelectItem>
-                    <SelectItem value='Medium'>Medium</SelectItem>
-                    <SelectItem value='Low'>Low</SelectItem>
+                    <SelectItem value='high'>High</SelectItem>
+                    <SelectItem value='medium'>Medium</SelectItem>
+                    <SelectItem value='low'>Low</SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -160,45 +176,73 @@ const CreateTaskForm = () => {
             />
           </div>
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant='outline'
-                className={cn(
-                  'w-full justify-start rounded-lg border-none bg-white/10 p-2 text-left text-white sm:p-4',
-                  !dueDate && 'text-muted-foreground'
-                )}
-              >
-                <LucideCalendar
-                  size={20}
-                  color='white
-                '
-                />
-                {dueDate ? (
-                  format(dueDate, 'PPP')
-                ) : (
-                  <span className='text-white'>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-auto bg-white p-0 text-black'>
-              <Calendar
-                mode='single'
-                selected={dueDate || undefined}
-                onSelect={(day: Date | undefined) => setDueDate(day || null)}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
+          <div className='space-y-2'>
+            <Label className='text-white' htmlFor='status'>
+              Status
+            </Label>
+            <Field name='status'>
+              {({ field, form }: { field: any; form: any }) => (
+                <Select
+                  onValueChange={value => form.setFieldValue('status', value)}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'>
+                    <SelectValue placeholder='Select status' />
+                  </SelectTrigger>
+                  <SelectContent className='bg-white text-black'>
+                    <SelectItem value='pending'>Pending</SelectItem>
+                    <SelectItem value='in_progress'>In Progress</SelectItem>
+                    <SelectItem value='completed'>Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            </Field>
+            <ErrorMessage
+              name='status'
+              component='p'
+              className='text-sm text-red-500'
+            />
+          </div>
 
           <div className='space-y-2'>
-            <Label className='text-white' htmlFor='category'>
-              Category
+            <Label className='text-white' htmlFor='dueDate'>
+              Due Date
             </Label>
-            <Field
-              name='category'
-              as={Input}
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant='outline'
+                  className={cn(
+                    'border-n one w-full justify-start rounded-lg bg-white/10 p-2 text-left text-white sm:p-4',
+                    !dueDate && 'text-muted-foreground'
+                  )}
+                >
+                  <LucideCalendar size={20} color='white' />
+                  {dueDate ? (
+                    format(dueDate, 'PPP')
+                  ) : (
+                    <span className='text-white'>Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className='w-auto bg-white p-0 text-black'>
+                <Calendar
+                  mode='single'
+                  selected={dueDate || undefined}
+                  onSelect={(dueDate: Date | undefined) => {
+                    setDueDate(dueDate || null)
+                    if (dueDate) {
+                      setFieldValue('dueDate', format(dueDate, 'PPP'))
+                    }
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+            <ErrorMessage
+              name='dueDate'
+              component='p'
+              className='text-sm text-red-500'
             />
           </div>
 

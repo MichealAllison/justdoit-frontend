@@ -2,33 +2,40 @@ import { Badge } from '@/components/ui/badge'
 import React from 'react'
 import Link from 'next/link'
 import { Task } from '../type'
+import { format } from 'date-fns'
 
-interface PriorityCardProps extends Task {
+interface TaskCardProps extends Task {
   priority: string
   title: string
   description: string
-  dueDate: string
-  category: string
+  due_date: string
+  status: string
   id: number
 }
 
 const priorityColors = {
-  High: 'bg-red-500',
-  Medium: 'bg-yellow-500',
-  Low: 'bg-green-500'
+  high: 'bg-red-500',
+  medium: 'bg-yellow-500',
+  low: 'bg-green-500'
 }
 
-const PriorityCard = ({
+const statusColors = {
+  pending: 'bg-yellow-500/50',
+  in_progress: 'bg-blue-500/50',
+  completed: 'bg-green-500/50'
+}
+
+const TaskCard = ({
   priority,
   title,
   description,
-  dueDate,
-  category,
+  due_date,
+  status,
   id
-}: PriorityCardProps) => {
+}: TaskCardProps) => {
   return (
     <div className='w-[320px] rounded-2xl bg-[#3a3939] p-4'>
-      <Link href={`/edit-task/${id}`}>
+      <Link href={`/preview/${id}`}>
         <div className='flex items-center justify-between'>
           <Badge
             variant='default'
@@ -36,18 +43,22 @@ const PriorityCard = ({
           >
             {priority}
           </Badge>
-          <p className='text-sm text-[#e9eaeb]'>{dueDate}</p>
         </div>
         <div className='mt-4 space-y-2'>
           <h3 className='text-xl font-bold text-[#e9eaeb]'>{title}</h3>
           <p className='text-sm text-[#e9eaeb]'>{description}</p>
         </div>
         <div className='mt-4 space-y-2'>
-          <p className='text-sm text-[#e9eaeb]'>{category}</p>
+          <Badge
+            variant='default'
+            className={statusColors[status as keyof typeof statusColors]}
+          >
+            {status}
+          </Badge>
         </div>
       </Link>
     </div>
   )
 }
 
-export default PriorityCard
+export default TaskCard

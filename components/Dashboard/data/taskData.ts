@@ -1,26 +1,49 @@
 import { TaskList } from '../type'
+import axios from 'axios'
 
-export const taskData: TaskList = [
-  {
-    id: 1,
-    title: 'Task One',
-    description: 'This is the first task.',
-    status: 'Completed',
-    priority: 'High',
-    dueDate: '2025-04-01T12:00',
-    category: 'Work'
-  },
-  {
-    id: 2,
-    title: 'Task Two',
-    description: 'This is the second task.',
-    status: 'In Progress',
-    priority: 'Medium',
-    dueDate: '2025-05-01T15:30',
-    category: 'Personal'
+// Function to fetch tasks from the API
+export const fetchTasks = async (): Promise<TaskList> => {
+  try {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      throw new Error('No access token found')
+    }
+
+    const response = await axios.get(
+      'https://todo-app-api-dg8b.onrender.com/api/task/api/v1/tasks/',
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Error fetching tasks:', error)
+    return []
   }
-]
+}
 
-export const getTaskById = (id: number) => {
-  return taskData.find(task => task.id === id)
+export const getTaskById = async (id: number) => {
+  try {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      throw new Error('No access token found')
+    }
+
+    const response = await axios.get(
+      `https://todo-app-api-dg8b.onrender.com/api/task/api/v1/tasks/${id}/`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    )
+
+    return response.data
+  } catch (error) {
+    console.error('Error fetching task:', error)
+    return null
+  }
 }

@@ -13,47 +13,74 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { taskData } from '@/components/Dashboard/data/taskData'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { Calendar, LucideCalendar } from 'lucide-react'
+import { LucideCalendar } from 'lucide-react'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
+import { Task, TaskList } from '@/components/Dashboard/type'
+import { fetchTasks } from '@/components/Dashboard/data/taskData'
+import axios, { AxiosError } from 'axios'
 interface TaskFormValues {
   title: string
   description: string
   priority: string
-  dueDate: string
-  category: string
+  due_date: string
+  status: string
 }
 
 const EditTaskForm = () => {
   const router = useRouter()
   const { id } = useParams() // Get the ID from URL params
   const [serverError, setServerError] = useState<string | null>(null)
+  const [tasks, setTasks] = useState<TaskList>([])
+  const [loading, setLoading] = useState(true)
   const [initialValues, setInitialValues] = useState<TaskFormValues>({
     title: '',
     description: '',
     priority: '',
-    dueDate: '',
-    category: ''
+    due_date: '',
+    status: ''
   })
 
   useEffect(() => {
-    if (id) {
-      const task = taskData.find(task => task.id === parseInt(id as string))
-      if (task) {
-        setInitialValues({
-          title: task.title,
-          description: task.description,
-          priority: task.priority,
-          dueDate: task.dueDate,
-          category: task.category
-        })
+    const loadTasks = async () => {
+      try {
+        const fetchedTasks = await fetchTasks()
+        setTasks(fetchedTasks)
+
+        if (id && fetchedTasks.length > 0) {
+          const task = fetchedTasks.find(
+            task => task.id === parseInt(id as string)
+          )
+          if (task) {
+            setInitialValues({
+              title: task.title,
+              description: task.description,
+              priority: task.priority,
+              due_date: task.due_date,
+              status: task.status
+            })
+
+            // Set due date if available
+            if (task.due_date) {
+              setDueDate(new Date(task.due_date))
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading tasks:', error)
+        setServerError('Failed to load task data')
+      } finally {
+        setLoading(false)
       }
     }
+
+    loadTasks()
   }, [id])
 
   const validate = (values: TaskFormValues) => {
@@ -61,7 +88,8 @@ const EditTaskForm = () => {
     if (!values.title) errors.title = 'Title is required'
     if (!values.description) errors.description = 'Description is required'
     if (!values.priority) errors.priority = 'Priority is required'
-    if (!values.dueDate) errors.dueDate = 'Due date is required'
+    if (!values.due_date) errors.due_date = 'Due date is required'
+    if (!values.status) errors.status = 'Status is required'
     return errors
   }
 
@@ -69,21 +97,32 @@ const EditTaskForm = () => {
 
   const handleSubmit = async (values: TaskFormValues) => {
     try {
-      const taskIndex = taskData.findIndex(
-        task => task.id === parseInt(id as string)
-      )
-      if (taskIndex !== -1) {
-        taskData[taskIndex] = {
-          ...taskData[taskIndex],
+      const token = localStorage.getItem('accessToken')
+
+      // ... existing code ...
+      const response = await axios.put(
+        `https://todo-app-api-dg8b.onrender.com/api/task/api/v1/tasks/{id}/`,
+        {
           title: values.title,
           description: values.description,
           priority: values.priority,
-          dueDate: values.dueDate,
-          category: values.category
+          due_date: values.due_date,
+          status: values.status
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
         }
-      }
+      )
+
       router.push('/dashboard')
     } catch (error) {
+      console.error(
+        'Error updating task:',
+        (error as AxiosError)?.response?.data || (error as Error).message
+      )
       setServerError('Failed to update task. Please try again.')
     }
   }
@@ -146,52 +185,75 @@ const EditTaskForm = () => {
           </div>
 
           <div className='space-y-2'>
-            <Label className='text-white'>Due Date</Label>
-            <Field
-              name='dueDate'
-              type='datetime-local'
-              as={Input}
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
-            />
+            <Label className='text-white' htmlFor='status'>
+              Status
+            </Label>
+            <Field name='status'>
+              {({ field, form }: { field: any; form: any }) => (
+                <Select
+                  onValueChange={value => form.setFieldValue('status', value)}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'>
+                    <SelectValue placeholder='Select status' />
+                  </SelectTrigger>
+                  <SelectContent className='bg-white text-black'>
+                    <SelectItem value='pending'>Pending</SelectItem>
+                    <SelectItem value='in_progress'>In Progress</SelectItem>
+                    <SelectItem value='completed'>Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            </Field>
             <ErrorMessage
-              name='dueDate'
+              name='status'
               component='p'
-              className='text-red-500'
+              className='text-sm text-red-500'
             />
           </div>
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant='outline'
-                className={cn(
-                  'w-full justify-start rounded-lg border-none bg-white/10 p-2 text-left text-white sm:p-4',
-                  !dueDate && 'text-muted-foreground'
-                )}
-              >
-                <LucideCalendar size={20} color='white' />
-                {dueDate ? (
-                  format(dueDate, 'PPP')
-                ) : (
-                  <span className='text-white'>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-auto bg-white p-0 text-black'>
-              <Calendar
-                mode='single'
-                selected={dueDate || undefined}
-                onSelect={(day: Date | undefined) => setDueDate(day || null)}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
           <div className='space-y-2'>
-            <Label className='text-white'>Category</Label>
-            <Field
-              name='category'
-              as={Input}
-              className='w-full rounded-lg border-none bg-white/10 p-2 text-white sm:p-4'
+            <Label className='text-white'>Due Date</Label>
+            <Field name='due_date'>
+              {({ field, form }: { field: any; form: any }) => (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant='outline'
+                      className={cn(
+                        'w-full justify-start rounded-lg border-none bg-white/10 p-2 text-left text-white sm:p-4',
+                        !dueDate && 'text-muted-foreground'
+                      )}
+                    >
+                      <LucideCalendar size={20} color='white' />
+                      {dueDate ? (
+                        format(dueDate, 'PPP')
+                      ) : (
+                        <span className='text-white'>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto bg-white p-0 text-black'>
+                    <Calendar
+                      mode='single'
+                      selected={dueDate || undefined}
+                      onSelect={(day: Date | undefined) => {
+                        setDueDate(day || null)
+                        if (day) {
+                          const formattedDate = format(day, 'yyyy-MM-dd')
+                          form.setFieldValue('due_date', formattedDate)
+                        }
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+            </Field>
+            <ErrorMessage
+              name='due_date'
+              component='p'
+              className='text-sm text-red-500'
             />
           </div>
 
