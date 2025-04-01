@@ -40,6 +40,7 @@ const Sidebar = () => {
           body: JSON.stringify({ refresh_token: refreshToken })
         }
       )
+      // const response = await fetch('/api/user/logout/', {
 
       if (!response.ok) {
         const errorText = await response.text()
@@ -50,10 +51,12 @@ const Sidebar = () => {
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
+      // Clear user session from localStorage
       clearSession()
     }
   }
 
+  // Helper function to clear session and redirect
   const clearSession = () => {
     try {
       ;[
@@ -93,10 +96,10 @@ const Sidebar = () => {
       </Button>
 
       <aside
-        className={`fixed left-0 top-0 flex h-screen w-full transform flex-col bg-gradient-to-t from-[#02298a] to-[#053667] p-4 text-white transition-transform ${
+        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#053667] p-4 text-white transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
-        style={{ height: 'fit', overflowY: 'scroll' }} // Ensuring full height with scroll
+        style={{ height: 'dvh', overflowY: 'scroll' }} // Ensuring full height with scroll
       >
         <div className='flex h-full flex-col'>
           {/* Sidebar Header */}
@@ -136,7 +139,7 @@ const Sidebar = () => {
 
           {/* Logout Button */}
 
-          <div className=''>
+          <div className='mt-auto'>
             <Button
               onClick={handleLogout}
               className='block w-full rounded-full bg-red-600 px-4 py-2 hover:bg-red-500'
