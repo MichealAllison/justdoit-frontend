@@ -96,7 +96,7 @@ const Sidebar = () => {
       </Button>
 
       <aside
-        className={`fixed left-0 top-0 flex h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#053667] p-4 text-white transition-transform ${
+        className={`fixed left-0 top-0 flex min-h-screen w-64 transform flex-col bg-gradient-to-t from-[#02298a] to-[#053667] p-4 text-white transition-transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:w-64 md:translate-x-0`}
         style={{ height: 'dvh', overflowY: 'scroll' }} // Ensuring full height with scroll
