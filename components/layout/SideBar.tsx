@@ -101,7 +101,7 @@ const Sidebar = () => {
         } md:relative md:w-64 md:translate-x-0`}
         style={{ height: '100vh', overflowY: 'scroll' }} // Ensuring full height with scroll
       >
-        <div className='flex h-full flex-col'>
+        <div className='flex h-svh flex-col'>
           {/* Sidebar Header */}
           <div className='flex-grow'>
             <h2 className='mb-6 text-xl font-bold'>DashZone</h2>
