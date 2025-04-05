@@ -34,6 +34,7 @@ const Login = () => {
               <p className='text-2xl font-bold text-[#8ebce9] md:text-4xl'>
                 JUST DO IT
               </p>
+
               <p className='text-sm font-normal text-[#8ebce9] md:text-base'>
                 Make life easy with JUST.DO.IT
               </p>
