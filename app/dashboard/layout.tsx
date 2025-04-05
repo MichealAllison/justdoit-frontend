@@ -1,6 +1,6 @@
 import ProtectedRoute from '@/components/layout/ProtectedRoute'
 import Sidebar from '@/components/layout/SideBar'
-import Providers from '@/providers'
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className='flex'>
@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <main className='flex-1 overflow-x-hidden p-6'>
-        <Providers>{children}</Providers>
+        <ProtectedRoute>{children}</ProtectedRoute>
       </main>
     </div>
   )
