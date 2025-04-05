@@ -104,7 +104,7 @@ const Sidebar = () => {
         <div className='flex h-svh flex-col'>
           {/* Sidebar Header */}
           <div className='flex-grow'>
-            <h2 className='mb-6 text-xl font-bold'>DashZone</h2>
+            <h2 className='mb-6 text-xl font-bold'>JUST DO IT</h2>
 
             {/* Sidebar Links */}
             <ul className='space-y-4'>
